@@ -8,30 +8,62 @@
 
 #import "CAMediaTimingViewController.h"
 
-@interface CAMediaTimingViewController ()
-
+@interface CAMediaTimingViewController ()<CAAnimationDelegate>
+@property (nonatomic, weak) IBOutlet UIView *containerView;
+@property (nonatomic, weak) IBOutlet UITextField *durationField;
+@property (nonatomic, weak) IBOutlet UITextField *repeatField;
+@property (nonatomic, weak) IBOutlet UIButton *startButton;
+@property (nonatomic, strong) CALayer *shipLayer;
 @end
 
 @implementation CAMediaTimingViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    //add the ship
+    self.shipLayer = [CALayer layer];
+    self.shipLayer.frame = CGRectMake(0, 0, 128, 128);
+    self.shipLayer.position = CGPointMake(150, 150);
+    self.shipLayer.contents = (__bridge id)[UIImage imageNamed: @"Ship.png"].CGImage;
+    [self.containerView.layer addSublayer:self.shipLayer];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)setControlsEnabled:(BOOL)enabled
+{
+    for (UIControl *control in @[self.durationField, self.repeatField, self.startButton]) {
+        control.enabled = enabled;
+        control.alpha = enabled? 1.0f: 0.25f;
+    }
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (IBAction)hideKeyboard
+{
+    [self.durationField resignFirstResponder];
+    [self.repeatField resignFirstResponder];
 }
-*/
+
+- (IBAction)start
+{
+    CFTimeInterval duration = [self.durationField.text doubleValue];
+    float repeatCount = [self.repeatField.text floatValue];
+    //animate the ship rotation
+    CABasicAnimation *animation = [CABasicAnimation animation];
+    animation.keyPath = @"transform.rotation";
+    animation.duration = duration;
+    animation.repeatCount = repeatCount;
+    animation.byValue = @(M_PI * 2);
+    animation.delegate = self;
+    [self.shipLayer addAnimation:animation forKey:@"rotateAnimation"];
+    //disable controls
+    [self setControlsEnabled:NO];
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    //reenable controls
+    [self setControlsEnabled:YES];
+}
+
 
 @end

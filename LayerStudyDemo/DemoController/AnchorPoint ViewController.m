@@ -16,7 +16,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    self.view.backgroundColor = [UIColor whiteColor];
+//    [self anchorPoint];
+}
+
+-(void)anchorPoint{
+    CALayer * customLayer = [CALayer layer];
+    customLayer.frame = CGRectMake((SCREEN_WIDTH-100)/2, (SCREEN_HEIGHT-100-64)/2, 100.0f, 100.0f);
+    customLayer.backgroundColor = [UIColor yellowColor].CGColor;
+    customLayer.contentsScale = [UIScreen mainScreen].scale; //add layer to our view
+    customLayer.anchorPoint = CGPointMake(0.5f, 0.9f);
+    [self.view.layer addSublayer:customLayer];
+    NSLog(@"%f,%f",customLayer.anchorPoint.x,customLayer.anchorPoint.y);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -24,14 +35,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -9,6 +9,7 @@
 #import "CGAffineTransformViewController.h"
 
 @interface CGAffineTransformViewController ()
+@property (weak, nonatomic) IBOutlet UITextView *layerTextView;
 
 @end
 
@@ -16,22 +17,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    //CGAffineTransform 创建初始化
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    //缩放
+    transform = CGAffineTransformScale(transform, 0.6, 0.6);
+    //旋转
+    transform = CGAffineTransformRotate(transform, M_PI / 180.0 * 30.0);
+    //位移变化
+    transform = CGAffineTransformTranslate(transform, 20, 100);
+    //应用到layer
+    self.layerTextView.layer.affineTransform = transform;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
